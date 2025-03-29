@@ -1,3 +1,6 @@
+# Mac DS_Store files for Finder display options
+.DS_Store
+
 # History files
 .Rhistory
 .Rapp.history
