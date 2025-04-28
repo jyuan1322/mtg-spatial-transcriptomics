@@ -16,7 +16,12 @@ DimPlot(comb_seurat, reduction="umap", label=TRUE, pt.size=.1, group.by="layer_l
 DimPlot(comb_seurat, reduction="umap", label=TRUE, pt.size=.1, group.by="layer_label_v1", cols=group.colors.unsmoothed) + NoLegend()
 dev.off()
 
-
+pdf("umap_v2_clusters_newL4_V4_01082025.pdf")
+DimPlot(comb_seurat, reduction="umap", label=TRUE, group.by="layer_label_v2", cols=group.colors.unsmoothed)
+DimPlot(comb_seurat, reduction="umap", label=TRUE, group.by="layer_label_v2", cols=group.colors.unsmoothed) + NoLegend()
+DimPlot(comb_seurat, reduction="umap", label=TRUE, group.by="smoothed_label_s5", cols=group.colors)
+DimPlot(comb_seurat, reduction="umap", label=TRUE, group.by="smoothed_label_s5", cols=group.colors) + NoLegend()
+dev.off()
 
 # Assignment of Layer 5 subclusters to new Layer 4 and Layer 5.
 # see on eristwo: /data/neurogen/jy1008/scRNAseq_integration/spatial_clustering_validation_06302022/validate_new_layer4_12132022.R
