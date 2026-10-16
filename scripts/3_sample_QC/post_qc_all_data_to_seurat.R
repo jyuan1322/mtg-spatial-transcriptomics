@@ -15,6 +15,7 @@ clinical_features_list <- "/data/neurogen/jy1008/scRNAseq_integration/all_data_Q
 output_data_file <- "/data/neurogen/jy1008/scRNAseq_integration/all_data_QC_06252022/st_input_files_postqc_postfilter_plusclinical_V4_10272023.csv"
 output_postqc_seurat_dir <- "/data/neurogen/jy1008/scRNAseq_integration/all_data_QC_06252022/output_postqc_seurat_objs_V4_10272023"
 output_seurat_name <- "postqc_V4_10272023"
+merged_seurat_file <- "/mnt/data0/projects/ASAP/ST/data/MTG_visium/comb_seurat_V4_postqc_10272023.rds"
 
 # create the output table if it doesn't already exist
 st_input_files <- read.csv(input_file_list, comment.char = '#')
@@ -133,7 +134,7 @@ for (i in rownames(st_input_files)) {
 data.list <- list()
 sample.list <- c()
 ii <- 1
-files <- list.files(path="/mnt/data0/projects/ASAP/ST/data/MTG_visium/output_postqc_seurat_objs_V4_10272023", pattern="*.rds", full.names=TRUE, recursive=FALSE)
+files <- list.files(path=output_postqc_seurat_dir, pattern="*.rds", full.names=TRUE, recursive=FALSE)
 for(st_file in files) {
     st_data <- readRDS(st_file)
     data.list[[ii]] = st_data
@@ -164,4 +165,4 @@ assert(is.numeric(combined@meta.data$last_mmse_test_score))
 assert(is.numeric(combined@meta.data$motor_updrs_score))
 assert(is.numeric(combined@meta.data$nctx_temporal))
 assert(is.numeric(combined@meta.data$brain_stem_sn))
-saveRDS(combined, "/mnt/data0/projects/ASAP/ST/data/MTG_visium/comb_seurat_V4_postqc_10272023.rds")
+saveRDS(combined, merged_seurat_file)

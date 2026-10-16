@@ -3,8 +3,14 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
+# inputs
+clinical_meta_csv = "/path/to/data/st_clinical_meta_data_V4_96samples.csv"  # written by st_clinical_overview.R
+
+# outputs
+output_pdf = "results/3_sample_QC/st_clinical_overview_3dplot.pdf"  # Fig. 1c
+
 # read clinical meta data from file
-df = pd.read_csv("st_clinical_meta_data_V4_96samples_10022024.csv")
+df = pd.read_csv(clinical_meta_csv)
 # df["nctx_temporal_factor_disp"] = df["nctx_temporal_factor"].replace(4, 3)
 df["nctx_temporal_factor_disp"] = df["nctx_temporal_factor"]
 # NOTE 1 nan value in nctx_temporal is not displayed
@@ -77,5 +83,5 @@ for diag in ["Control", "Prodromal", "Case"]:
 
 # plt.gca().invert_xaxis()
 plt.gca().invert_yaxis()
+fig.savefig(output_pdf, bbox_inches='tight')
 plt.show()
-fig.savefig("st_clinical_overview_3dplot_10022024.pdf", bbox_inches='tight')

@@ -6,6 +6,22 @@ library(dplyr)
 library(ggplot2)
 library(stringr)
 
+# initial spatial data samples file
+input_file_list <- "/data/neurogen/jy1008/scRNAseq_integration/all_data_QC_06252022/st_mtg_input_files_list_V4_10252023.csv"
+
+useLogNorm <- TRUE
+if(useLogNorm) {
+    output_data_file <- "sample_qc_slot_lognorm_V4_10272023.xls"
+    output_image_file <- "sample_qc_slot_lognorm_V4_output_10272023.pdf"
+    output_st_sample_file <- "st_input_files_postqc_V4_10272023.csv"
+    output_spatial_file <- "sample_qc_slot_lognorm_V4_singleclust_10272023.pdf"
+} else {
+    output_data_file <- "sample_qc_slot_counts_V4_10272023.xls"
+    output_image_file <- "sample_qc_slot_counts_V4_output_10272023.pdf"
+    output_st_sample_file <- "st_input_files_postqc_V4_10272023.csv"
+    output_spatial_file <- "sample_qc_slot_counts_V4_singleclust_10272023.pdf"
+}
+
 spatial_score <- function(seurat_obj) {
     # cluster just this seurat obj first
     seurat_obj <- NormalizeData(seurat_obj,
@@ -70,23 +86,6 @@ spatial_score <- function(seurat_obj) {
 }
 
 set.seed(101)
-
-# initial spatial data samples file
-input_file_list <- "/data/neurogen/jy1008/scRNAseq_integration/all_data_QC_06252022/st_mtg_input_files_list_V4_10252023.csv"
-
-useLogNorm <- TRUE
-if(useLogNorm) {
-    output_data_file <- "sample_qc_slot_lognorm_V4_10272023.xls"
-    output_image_file <- "sample_qc_slot_lognorm_V4_output_10272023.pdf"
-    output_st_sample_file <- "st_input_files_postqc_V4_10272023.csv"
-    output_spatial_file <- "sample_qc_slot_lognorm_V4_singleclust_10272023.pdf"
-} else {
-    output_data_file <- "sample_qc_slot_counts_V4_10272023.xls"
-    output_image_file <- "sample_qc_slot_counts_V4_output_10272023.pdf"
-    output_st_sample_file <- "st_input_files_postqc_V4_10272023.csv"
-    output_spatial_file <- "sample_qc_slot_counts_V4_singleclust_10272023.pdf"
-}
-
 
 # create the output table if it doesn't already exist
 st_input_files <- read.csv(input_file_list, comment.char = '#')
