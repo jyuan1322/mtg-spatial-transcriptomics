@@ -14,8 +14,8 @@ comb_seurat@meta.data$nctx_temporal_fix[comb_seurat@meta.data$nctx_temporal_fix 
 assert(all(colnames(comb_seurat@assays$Spatial@data) == rownames(comb_seurat@meta.data)))
 
 setwd("~/mtg_smooth_vs_unsmooth_analysis_11212024")
-source("internal.R")
-source("presto.R")
+# source("internal.R")
+# source("presto.R")
 
 # run for each control/ILBD/case subset
 # comb_sub <- subset(comb_seurat, subset = diagnosis == "Control")
