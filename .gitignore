@@ -50,3 +50,5 @@ po/*~
 
 # RStudio Connect folder
 rsconnect/
+scripts/5_post_clustering_validation/RunPresto/
+scripts/2_spatial_QC_fold_removal/interactive_seurat/app_orig.R
