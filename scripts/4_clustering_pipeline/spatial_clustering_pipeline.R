@@ -215,55 +215,7 @@ cluster_pipeline <- function(comb_seurat, job_name,
     return(comb_seurat)
 }
 
-# generate merged Seurat file
-# source("spatial_pipeline_merge_seurat_02242022.R")
-
-# merged_seurat <- "spatial_pipeline_seurat_controls_only_stage1_02242022.rds"
-
-# combined <- readRDS(merged_seurat)
-# job_name <- "all_controls_3covars0p4_sampleid0p4_02242022"
-# harmony_vars <- c("orig.ident", "batch", "sex", "expired_age")
-# harmony_thetas <- c(0.4, 0.4, 0.4, 0.4)
-# resolutions_list <- c(0.1, 0.2, 0.3, 0.4, 0.5)
-# cluster_pipeline(combined, job_name,
-#                  harmony_vars = harmony_vars,
-#                  harmony_thetas = harmony_thetas,
-#                  resolutions_list=resolutions_list)
-
-
-
-# # 05/07/2022
-# merged_seurat <- "spatial_pipeline_seurat_all_data_stage1_10yrbt_05052022.rds"
-# combined <- readRDS(merged_seurat)
-# job_name <- "all_controls_5covars0p2_05072022_v2"
-# harmony_vars <- c("orig.ident", "sex", "expired_age", "PMI", "RIN")
-# harmony_thetas <- c(0.2, 0.2, 0.2, 0.2, 0.2)
-# resolutions_list <- c(0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6)
-# cluster_pipeline(combined, job_name,
-#                  harmony_vars = harmony_vars,
-#                  harmony_thetas = harmony_thetas,
-#                  resolutions_list = resolutions_list,
-#                  random_seed = 101)
-
-# # 10/17/2023
-# merged_seurat <- "/mnt/data0/projects/ASAP/ST/data/MTG_visium/comb_seurat_V2_postqc_10162023.rds"
-# combined <- readRDS(merged_seurat)
-# job_name <- "all_data_5covars0p4_10172023"
-# harmony_vars <- c("orig.ident", "sex", "expired_age", "PMI", "RIN")
-# harmony_thetas <- c(0.4, 0.4, 0.4, 0.4, 0.4)
-# resolutions_list <- c(0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6)
-# cluster_pipeline(combined, job_name,
-#                  harmony_vars = harmony_vars,
-#                  harmony_thetas = harmony_thetas,
-#                  resolutions_list = resolutions_list,
-#                  random_seed = 101)
-
-
 # 10/23/2023 5 covariates
-# merged_seurat <- "/mnt/data0/projects/ASAP/ST/data/MTG_visium/comb_seurat_V2_postqc_10162023.rds"
-# new server
-# merged_seurat <- "/mnt/data/projects/ASAP/data/comb_seurat_V2_postqc_10182023.rds"
-# merged_seurat <- "/mnt/data0/projects/ASAP/ST/data/MTG_visium/comb_seurat_V3_postqc_10182023.rds"
 merged_seurat <- "/mnt/data0/projects/ASAP/ST/data/MTG_visium/comb_seurat_V4_postqc_10272023.rds"
 combined <- readRDS(merged_seurat)
 resolutions_list <- c(0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6)
@@ -278,16 +230,3 @@ for(random_seed in c(101, 201, 301)) {
                      resolutions_list = resolutions_list,
                      random_seed = random_seed)
 }
-
-# # 10/23/2023 only sample_d in Harmony covariates
-# harmony_vars <- c("orig.ident")
-# harmony_thetas <- c(2.0)
-# for(random_seed in c(101, 201, 301)) {
-#     combined_looprun <- combined
-#     job_name <- sprintf("all_data_1covar2p0_V3_seed%s_10182023", random_seed)
-#     cluster_pipeline(combined, job_name,
-#                      harmony_vars = harmony_vars,
-#                      harmony_thetas = harmony_thetas,
-#                      resolutions_list = resolutions_list,
-#                      random_seed = random_seed)
-# }
