@@ -2,9 +2,6 @@ library(ggplot2)
 library(corrplot)
 library(RColorBrewer)
 
-# NOTE: this file should be named 01102023?
-# layer_corrs <- read.csv("~/Downloads/maynard_validation_pearson_svm_smoothed_01102022.csv")
-
 generate_corr_heatmap <- function(corr_file) {
     layer_corrs <- read.csv(corr_file)
     rownames(layer_corrs) <- layer_corrs$X
