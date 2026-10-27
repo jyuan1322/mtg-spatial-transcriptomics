@@ -120,42 +120,6 @@ score_layer_fit <- function(comb_seurat, cluster_label_name, image_name=NULL, ve
     return(layer_scores)
 }
 
-# Fraction of new to old spots: this should be between [0.8-1.2], otherwise, apply a penalty
-# i.e. it should be bounded below as well so we are not losing that much of Layer 4
-# score_Layer4_fraction <- function(comb_seurat, orig_col, new_col, image_name, penalty_thresh=1.4) {
-#     img_rows <- rownames(comb_seurat@images[[img]]@coordinates)
-#     meta_sub <- comb_seurat@meta.data[img_rows, c(orig_col, new_col)]
-#     new_count <- sum(meta_sub[, new_col] == "Layer 4")
-#     old_count <- sum(meta_sub[, orig_col] == "Layer 4")
-#     # return(max(0, new_count/old_count - penalty_thresh))
-#     return(max(0, abs(new_count/old_count - 1) - (penalty_thresh-1)))
-}
-# score_Layer4_fraction_v2 <- function(comb_seurat, orig_col, new_col, image_name) {
-#     img_rows <- rownames(comb_seurat@images[[img]]@coordinates)
-#     meta_sub <- comb_seurat@meta.data[img_rows, c(orig_col, new_col)]
-#     new_count <- sum(meta_sub[, new_col] == "Layer 4")
-#     old_count <- sum(meta_sub[, orig_col] == "Layer 4")
-#     # return(max(0, new_count/old_count - penalty_thresh))
-#     even_exponent = 4 # 2,4,6
-#     return( (new_count/old_count - 1)**even_exponent )
-# }
-# score_WM_fraction <- function(comb_seurat, orig_col, new_col, image_name, penalty_thresh=1.4) {
-#     img_rows <- rownames(comb_seurat@images[[img]]@coordinates)
-#     meta_sub <- comb_seurat@meta.data[img_rows, c(orig_col, new_col)]
-#     new_count1 <- sum(meta_sub[, new_col] == "WM")
-#     old_count1 <- sum(meta_sub[, orig_col] == "WM")
-#     new_count2 <- sum(meta_sub[, new_col] == "Layer 6")
-#     old_count2 <- sum(meta_sub[, orig_col] == "Layer 6")
-#     total_score <- 0
-#     if(old_count1 > 0) {
-#         total_score <- total_score + max(0, abs(new_count1/old_count1 - 1) - (penalty_thresh-1))
-#     }
-#     if(old_count2 > 0) {
-#         total_score <- total_score + max(0, abs(new_count2/old_count2 - 1) - (penalty_thresh-1))
-#     }
-#     return( total_score )
-# }
-
 score_layer_fraction <- function(comb_seurat, orig_col, new_col, image_name, layer_set, penalty_thresh=1.4) {
     img_rows <- rownames(comb_seurat@images[[image_name]]@coordinates)
     meta_sub <- comb_seurat@meta.data[img_rows, c(orig_col, new_col)]
@@ -170,8 +134,6 @@ score_layer_fraction <- function(comb_seurat, orig_col, new_col, image_name, lay
     return( total_score )
 }
 
-# comb_seurat <- readRDS("/data/neurogen/jy1008/scRNAseq_integration/spatial_clustering_validation_06302022/comb_seurat_diet_out_no_reducs_newlayer4_12152022.rds")
-# panda server
 comb_seurat <- readRDS("/mnt/data0/projects/ASAP/ST/clustering_pipeline/post_clustering_validation_V4_seed101_10172023/comb_seurat_diet_out_plusL4_V4_seed101_11092023.rds")
 
 
@@ -261,7 +223,6 @@ for( img in names(comb_seurat_L4@images) ) {
     }
     # get best-performing params
     scan_params <- scan_params[order(scan_params[, "layer_score"] - 10*scan_params[, "l4_penalty"], decreasing=TRUE), ]
-    # write.csv(scan_params, sprintf("layer_smoothing_s1_L2-6_%s_scan_params_11132023.csv", sample_name_filt))
     scan_params_all <- rbind(scan_params_all, scan_params)
     best_svm_gamma <- scan_params[1, "svm_gamma"]
     best_svm_cost <- scan_params[1, "svm_cost"]
@@ -297,20 +258,7 @@ write.csv(scan_params_all, "layer_smoothing_s1_L2-6_all_scan_params_11302023.csv
 
 
 
-# comb_sub_L1 <- readRDS("/mnt/data0/projects/ASAP/ST/clustering_pipeline/post_clustering_validation_V4_seed101_10172023/seurat_subclust_5covar0p4_V4_Layer1_seed101_10272023/comb_seurat_diet_out.rds")
-
 comb_seurat@meta.data[, "s2_subclust"] <- comb_seurat@meta.data[, "smoothed_label_s1"]
-# comb_seurat@meta.data[rownames(comb_sub_L1@meta.data), "s2_subclust"] <- comb_sub_L1@meta.data[, "Spatial_snn_res.0.1"]
-# NOTE that %in% bypasses NA
-# comb_seurat@meta.data[comb_seurat@meta.data$s2_subclust %in% c(1), "s2_subclust"] <- "L1_1"
-# comb_seurat@meta.data[comb_seurat@meta.data$s2_subclust %in% c(2), "s2_subclust"] <- "L1_2"
-# comb_seurat@meta.data[comb_seurat@meta.data$s2_subclust %in% c(3), "s2_subclust"] <- "L1_3"
-# comb_seurat@meta.data[comb_seurat@meta.data$s2_subclust %in% c(4,5,6,7), "s2_subclust"] <- NA
-
-# # ignore WM_1
-# # comb_seurat@meta.data[comb_seurat@meta.data$layer_label_v2 == "WM_1", "s2_subclust"] <- "WM_1"
-# comb_seurat@meta.data[comb_seurat@meta.data$layer_label_v2 == "WM_2", "s2_subclust"] <- "WM_2"
-# comb_seurat@meta.data[comb_seurat@meta.data$layer_label_v2 == "WM_3", "s2_subclust"] <- "WM_3"
 
 # 11/30/2023 Don't sub-cluster WM and L1
 comb_seurat@meta.data[comb_seurat@meta.data$layer_label_v2 == "Layer 1", "s2_subclust"] <- "Layer 1"
@@ -332,8 +280,6 @@ dev.off()
 # for each spot, calculate score based on gaussian kernel
 # L1_1: 1, 2, 3, 4, 5, 6, WM_3: 7
 
-# s2_score_table <- list("L1_1" = 1, "Layer 2" = 2, "Layer 3" = 3, "Layer 4" = 4, "Layer 5" = 5, "Layer 6" = 6, "WM_2"=7, "WM_3" = 10)
-# test 11/30/2023
 s2_score_table <- list("Layer 2" = 2, "Layer 3" = 3, "Layer 4" = 4, "Layer 5" = 5, "Layer 6" = 6)
 # scores of 0 are omitted from the kernel weighted average
 comb_seurat@meta.data[, "s2_subclust_score"] <- 0
@@ -343,7 +289,6 @@ for(s2_layer in names(s2_score_table)) {
 
 cluster_labels <- comb_seurat@meta.data[, c("orig.ident", "s2_subclust_score")]
 rbf_gamma <- 0.01 # gamma: low value means more long-range influence
-# rbf_gamma <- 0.05
 for (img in names(comb_seurat@images)) {
     print(paste("Processing stage 2 subcluster score: ", img))
     set.seed(random_seed)
@@ -443,22 +388,16 @@ dev.off()
 
 comb_seurat@meta.data$smoothed_label_s2 <- comb_seurat@meta.data$s2_subclust
 # Set WM to NA if s2_nbr_score less than 3
-# WM_lt_thresh <- 4
 WM_lt_thresh <- 3
 # WM_3 tends to confound with L1, whereas WM_2 tends to confound with GM
 # set WM_3 spots failing threshold to L1, but set WM_2 spots failing threshold to NA (to be imputed later)
-# comb_seurat@meta.data[comb_seurat@meta.data$s2_subclust %in% c("WM_2", "WM_3"), "smoothed_label_s2"] <- "WM"
 comb_seurat@meta.data[comb_seurat@meta.data$s2_subclust %in% c("WM_2", "WM_3"), "smoothed_label_s2"] <- "WM"
-# comb_seurat@meta.data[comb_seurat@meta.data$s2_subclust %in% c("WM_2") & comb_seurat@meta.data$s2_nbr_score < WM_lt_thresh, "smoothed_label_s2"] <- NA
-# # comb_seurat@meta.data[comb_seurat@meta.data$s2_subclust %in% c("WM_3") & comb_seurat@meta.data$s2_nbr_score < WM_lt_thresh, "smoothed_label_s2"] <- "Layer 1"
-# comb_seurat@meta.data[comb_seurat@meta.data$s2_subclust %in% c("WM_3") & comb_seurat@meta.data$s2_nbr_score < WM_lt_thresh, "smoothed_label_s2"] <- NA
+
 comb_seurat@meta.data[comb_seurat@meta.data$s2_subclust %in% c("WM_2", "WM_3") & comb_seurat@meta.data$s2_nbr_score < WM_lt_thresh, "smoothed_label_s2"] <- NA
 
 # Set L1 to NA if s2_nbr_score greater than 4
 L1_gt_thresh <- 4
-# comb_seurat@meta.data[comb_seurat@meta.data$s2_subclust %in% c("L1_1", "L1_2", "L1_3"), "smoothed_label_s2"] <- "Layer 1"
 comb_seurat@meta.data[comb_seurat@meta.data$s2_subclust %in% c("Layer 1"), "smoothed_label_s2"] <- "Layer 1"
-# comb_seurat@meta.data[comb_seurat@meta.data$s2_subclust %in% c("L1_1", "L1_2", "L1_3") & comb_seurat@meta.data$s2_nbr_score > L1_gt_thresh, "smoothed_label_s2"] <- NA
 comb_seurat@meta.data[comb_seurat@meta.data$s2_subclust %in% c("Layer 1") & comb_seurat@meta.data$s2_nbr_score > L1_gt_thresh, "smoothed_label_s2"] <- NA
 
 pdf(sprintf("layer_smoothing_s2_postfilter_label_all_gamma%s_L1%s_WM%s_11302023.pdf", rbf_gamma, L1_gt_thresh, WM_lt_thresh))
@@ -485,14 +424,6 @@ comb_seurat_WM <- subset(comb_seurat, subset = smoothed_label_s2 %in% c("Layer 2
 comb_seurat@meta.data[, "smoothed_label_s3"] <- NA
 
 comb_seurat_WM@meta.data$smoothed_label_s2 <- as.factor(comb_seurat_WM@meta.data$smoothed_label_s2)
-# comb_seurat_temp <- svm_smooth_labels(comb_seurat_WM,
-#                             cluster_label_name = "smoothed_label_s2",
-#                             svm_gamma = svm_gamma,
-#                             svm_cost = svm_cost,
-#                             class_weights = class_weights,
-#                             image_name = NULL,
-#                             output_label_name = "smoothed_label_s3",
-#                             random_seed = random_seed)
 
 scan_params_all <- c()
 pdf("layer_smoothing_s3_L2-6WM_all_11302023.pdf")
