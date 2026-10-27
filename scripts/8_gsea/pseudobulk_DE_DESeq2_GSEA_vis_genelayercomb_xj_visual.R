@@ -23,8 +23,8 @@ library(treeio)
 library(tidytree)
 library(ggstar)
 library(ggnewscale)
-source("/Users/jy1008/Downloads/pseudobulk_DE_DESeq2_GSEA_12292023_utils.R")
-source("/Users/jy1008/Downloads/gheatmap_custom.R")
+source("/Users/jy1008/Downloads/pseudobulk_DE_DESeq2_GSEA_utils.R")
+//source("/Users/jy1008/Downloads/gheatmap_custom.R")
 
 prep_gsea_df <- function(combined_gt, pathway_db, num_sig_tests_cutoff = 1, nes_cutoff = 0, goslim_cutoff=0.7) {
     # create dotplot across layers

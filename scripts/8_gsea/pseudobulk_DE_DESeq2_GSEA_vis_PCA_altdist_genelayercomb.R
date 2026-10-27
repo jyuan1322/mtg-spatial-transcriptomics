@@ -23,8 +23,8 @@ library(treeio)
 library(tidytree)
 library(ggstar)
 library(ggnewscale)
-source("/Users/jy1008/Downloads/pseudobulk_DE_DESeq2_GSEA_12292023_utils.R")
-source("/Users/jy1008/Downloads/gheatmap_custom.R")
+source("pseudobulk_DE_DESeq2_GSEA_utils.R")
+//source("/Users/jy1008/Downloads/gheatmap_custom.R")
 
 prep_gsea_df <- function(combined_gt, pathway_db, num_sig_tests_cutoff = 1, nes_cutoff = 0, goslim_cutoff=0.7) {
     # create dotplot across layers
@@ -226,7 +226,11 @@ get_best_cutree <- function(cluster.row, tot_dist_temp, desired_num_k = NA, min_
     # score by cluster
     # https://stackoverflow.com/a/72166839
     # ss[ , ] %>% as.data.frame() %>% group_by(cluster) %>% mutate(mean_clust_sw = mean(sil_width), clust_count = n()) %>% arrange(clust_count) %>% as.data.frame()
-    max_clust_ks <- localMaxima(sil_widths[order(sil_widths$clust_k), "mean_sil_width"])
+    # indexing issue causing a slightly suboptimal number of clusters for visualization
+    # max_clust_ks <- localMaxima(sil_widths[order(sil_widths$clust_k), "mean_sil_width"])
+    max_clust_ks_idx <- localMaxima(sil_widths[order(sil_widths$clust_k), "mean_sil_width"])
+    max_clust_ks <- sil_widths[order(sil_widths$clust_k), "clust_k"][max_clust_ks_idx]
+
     # max_clust_ks <- sil_widths[max_clust_ks, "mean_sil_width"]
     if(is.na(desired_num_k)) {
         best_clust_k <- sil_widths[sil_widths$mean_sil_width == max(sil_widths$mean_sil_width), "clust_k"]

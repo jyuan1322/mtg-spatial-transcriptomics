@@ -1,6 +1,3 @@
-# see ~/Downloads/process_layer_output_top5_heatmap_02012024.R
-# see ~/Downloads/process_layer_output_MAplots_02012024.R
-
 library(stringr)
 library(ggplot2)
 library(dplyr)
@@ -475,7 +472,7 @@ temp_gsea <- read.table(temp_file, header=TRUE, sep='\t')
 # dotplot with four conditions: ctrl/ilbd redef, ctrl/case redef, (ctrl+ilbd)/case, nctx_temporal_fix
 library(ggtree)
 library(cluster)
-source("/Users/jy1008/Downloads/pseudobulk_DE_DESeq2_GSEA_12292023_utils.R")
+source("pseudobulk_DE_DESeq2_GSEA_utils.R")
 
 comb_path <- "/Users/jy1008/Downloads/pseudobulk_DE_GSEA_V4_01102024/GO-BP"
 comb_files <- list(
@@ -899,7 +896,11 @@ get_best_cutree <- function(cluster.row, tot_dist_temp, desired_num_k = NA, min_
     # score by cluster
     # https://stackoverflow.com/a/72166839
     # ss[ , ] %>% as.data.frame() %>% group_by(cluster) %>% mutate(mean_clust_sw = mean(sil_width), clust_count = n()) %>% arrange(clust_count) %>% as.data.frame()
-    max_clust_ks <- localMaxima(sil_widths[order(sil_widths$clust_k), "mean_sil_width"])
+    # max_clust_ks <- localMaxima(sil_widths[order(sil_widths$clust_k), "mean_sil_width"])
+    # indexing issue causing a slightly suboptimal number of clusters for visualization
+    max_clust_ks_idx <- localMaxima(sil_widths[order(sil_widths$clust_k), "mean_sil_width"])
+    max_clust_ks <- sil_widths[order(sil_widths$clust_k), "clust_k"][max_clust_ks_idx]
+
     # max_clust_ks <- sil_widths[max_clust_ks, "mean_sil_width"]
     if(is.na(desired_num_k)) {
         best_clust_k <- sil_widths[sil_widths$mean_sil_width == max(sil_widths$mean_sil_width), "clust_k"]
